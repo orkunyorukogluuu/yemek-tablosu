@@ -1,593 +1,601 @@
-< !DOCTYPE html >
-  <html lang="tr">
-    <head>
-      <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Aile Günlüğü</title>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap');
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aile Günlüğü</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap');
 
-            :root{
-              --paper: #F1F4EC;
-            --paper-card: #FFFFFF;
-            --ink: #2E3B2C;
-            --ink-soft: rgba(46,59,44,0.55);
-            --plum: #6B4A63;
-            --gold: #C9A227;
-            --gold-soft: #F2E7C4;
-            --sage: #5C7A52;
-            --sage-soft: #DCE6D4;
-            --coral: #C8695A;
-            --line: rgba(46,59,44,0.14);
-  }
-
-            *{box - sizing: border-box; }
-
-            body{
-              margin:0;
-            background: var(--paper);
-            font-family: 'Nunito', sans-serif;
-            color: var(--ink);
+  :root{
+    --paper: #F1F4EC;
+    --paper-card: #FFFFFF;
+    --ink: #2E3B2C;
+    --ink-soft: rgba(46,59,44,0.55);
+    --plum: #6B4A63;
+    --gold: #C9A227;
+    --gold-soft: #F2E7C4;
+    --sage: #5C7A52;
+    --sage-soft: #DCE6D4;
+    --coral: #C8695A;
+    --line: rgba(46,59,44,0.14);
   }
 
-            .wrap{
-              max - width: 640px;
-            margin: 0 auto;
-            padding: 28px 18px 60px 18px;
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    font-family: 'Nunito', sans-serif;
+    color: var(--ink);
   }
 
-            .title{
-              font - family: 'Fraunces', serif;
-            font-weight: 600;
-            font-size: 1.7rem;
-            color: var(--plum);
-            margin: 0 0 4px 0;
-            letter-spacing: -0.01em;
-  }
-            .subtitle{
-              font - size: 0.85rem;
-            color: var(--ink-soft);
-            margin: 0 0 22px 0;
+  .wrap{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 18px 60px 18px;
   }
 
-            .setup-banner{
-              background: #FCEFEA;
-            border: 1px solid var(--coral);
-            color: var(--coral);
-            border-radius: 14px;
-            padding: 14px 16px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.5;
+  .title{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--plum);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+  }
+  .subtitle{
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 0 0 22px 0;
   }
 
-            .tabs{
-              display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-  }
-            .tab{
-              flex: 1;
-            border: 2px solid var(--line);
-            cursor: pointer;
-            padding: 12px 0;
-            border-radius: 14px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-            font-size: 0.98rem;
-            transition: all 0.2s ease;
-            background: #fff;
-            color: var(--ink-soft);
-  }
-            .tab.active{color: #fff; border-color: transparent; }
-            .tab.active[data-person="anne"]{background: var(--gold); }
-            .tab.active[data-person="teyze"]{background: var(--sage); }
-
-            .date-nav{
-              display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-  }
-            .date-label{
-              font - family: 'Fraunces', serif;
-            font-weight: 600;
-            font-size: 1.15rem;
-            color: var(--ink);
-            text-transform: capitalize;
-            text-align: center;
-  }
-            .today-pill{
-              display: inline-block;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.08em;
-            color: var(--sage);
-            background: rgba(92,122,82,0.12);
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-top: 4px;
-  }
-            .nav-btn{
-              width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--line);
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--ink);
-            transition: border-color 0.2s;
-            font-size: 1.1rem;
-  }
-            .nav-btn:hover{border - color: var(--plum); }
-            .nav-btn:disabled{opacity: 0.4; cursor: default; }
-
-            .sheet{
-              background: var(--paper-card);
-            border-radius: 22px;
-            padding: 22px 20px;
-            box-shadow: 0 14px 40px -22px rgba(46,59,44,0.35);
-            border: 1px solid var(--line);
-            position: relative;
+  .setup-banner{
+    background: #FCEFEA;
+    border: 1px solid var(--coral);
+    color: var(--coral);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.5;
   }
 
-            .meal-row{
-              display: grid;
-            grid-template-columns: 34px 1fr 92px;
-            gap: 10px;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px dashed var(--line);
+  .tabs{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
   }
-            .meal-row:first-child{padding - top: 2px; }
-            .meal-icon{
-              width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+  .tab{
+    flex: 1;
+    border: 2px solid var(--line);
+    cursor: pointer;
+    padding: 12px 0;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.98rem;
+    transition: all 0.2s ease;
+    background: #fff;
+    color: var(--ink-soft);
   }
-            .meal-label{
-              font - size: 0.72rem;
-            font-weight: 700;
-            color: var(--ink-soft);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 4px;
-  }
-            input[type="text"], input[type="time"]{
-              width: 100%;
-            border: none;
-            border-bottom: 2px solid var(--line);
-            background: transparent;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.95rem;
-            color: var(--ink);
-            padding: 6px 2px;
-            outline: none;
-            transition: border-color 0.2s;
-  }
-            input[type="text"]:focus, input[type="time"]:focus{border - color: var(--plum); }
-            input[type="time"]{font - family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
-            input::placeholder{color: rgba(46,59,44,0.32); }
-            input:disabled{opacity: 0.5; }
+  .tab.active{ color: #fff; border-color: transparent; }
+  .tab.active[data-person="anne"]{ background: var(--gold); }
+  .tab.active[data-person="teyze"]{ background: var(--sage); }
 
-            .sport-row{
-              display: grid;
-            grid-template-columns: 34px 1fr;
-            gap: 10px;
-            align-items: center;
-            padding: 16px 0 4px 0;
+  .date-nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
   }
+  .date-label{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--ink);
+    text-transform: capitalize;
+    text-align: center;
+  }
+  .today-pill{
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--sage);
+    background: rgba(92,122,82,0.12);
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+  .nav-btn{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    font-size: 1.1rem;
+  }
+  .nav-btn:hover{ border-color: var(--plum); }
+  .nav-btn:disabled{ opacity: 0.4; cursor: default; }
 
-            .save-btn{
-              width: 100%;
-            margin-top: 18px;
-            border: none;
-            cursor: pointer;
-            padding: 14px 0;
-            border-radius: 14px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-            font-size: 1rem;
-            color: #fff;
-            transition: opacity 0.2s, transform 0.15s;
-  }
-            .save-btn:active{transform: scale(0.98); }
-            .save-btn:disabled{opacity: 0.6; cursor: default; }
-
-            .flash{text - align:center; font-size:0.85rem; color:var(--sage); font-weight:700; margin-top:10px; min-height: 20px; }
-            .flash.err{color: var(--coral); }
-
-            .history-title{
-              font - family: 'Fraunces', serif;
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: var(--plum);
-            margin: 34px 0 12px 4px;
-  }
-            .hist-empty{font - size: 0.85rem; color: var(--ink-soft); padding: 10px 4px; }
-            .hist-item{
-              display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-  }
-            .hist-item:hover{border - color: var(--plum); }
-            .hist-date{
-              font - family: 'IBM Plex Mono', monospace;
-            font-size: 0.72rem;
-            color: #fff;
-            padding: 6px 8px;
-            border-radius: 8px;
-            white-space: nowrap;
-  }
-            .hist-summary{
-              flex: 1;
-            font-size: 0.82rem;
-            color: var(--ink-soft);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-  }
-            .hist-actions{display:flex; gap:6px; align-items:center; }
-            .icon-btn{
-              width: 30px; height: 30px; border-radius: 8px; border: none;
-            background: rgba(46,59,44,0.06);
-            display:flex; align-items:center; justify-content:center;
-            cursor:pointer; color: var(--ink-soft); font-size: 0.85rem;
-  }
-            .icon-btn:hover{background: rgba(46,59,44,0.12); }
-            .icon-btn.danger{color: var(--coral); }
-            .confirm-row{display:flex; gap:6px; align-items:center; font-size:0.75rem; color:var(--coral); font-weight:700; white-space:nowrap; }
-
-            .spinner{
-              position:absolute; top:16px; right:16px;
-            font-size: 0.7rem; color: var(--ink-soft);
+  .sheet{
+    background: var(--paper-card);
+    border-radius: 22px;
+    padding: 22px 20px;
+    box-shadow: 0 14px 40px -22px rgba(46,59,44,0.35);
+    border: 1px solid var(--line);
+    position: relative;
   }
 
-            @media (prefers-reduced-motion: reduce){ * { transition: none!important; }}
-          </style>
-        </head>
-        <body>
+  .meal-row{
+    display: grid;
+    grid-template-columns: 34px 1fr 92px;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .meal-row:first-child{ padding-top: 2px; }
+  .meal-icon{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .meal-label{
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  input[type="text"], input[type="time"]{
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--line);
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 6px 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus, input[type="time"]:focus{ border-color: var(--plum); }
+  input[type="time"]{ font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
+  input::placeholder{ color: rgba(46,59,44,0.32); }
+  input:disabled{ opacity: 0.5; }
 
-          <div class="wrap">
-            <h1 class="title">Aile Günlüğü</h1>
-            <p class="subtitle">Yemek saatlerini ve hareketi günlük takip et.</p>
+  .sport-row{
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 16px 0 4px 0;
+  }
 
-            <div class="setup-banner" id="setup-banner" style="display:none;">
-              ⚠️ Henüz bir Google E-Tablosu bağlantısı ayarlanmadı. Verilerin senin bilgisayarında görünmesi için sayfanın en altındaki <code>SCRIPT_URL</code> değerini kendi Apps Script linkinle değiştirmen gerekiyor.
-            </div>
+  .save-btn{
+    width: 100%;
+    margin-top: 18px;
+    border: none;
+    cursor: pointer;
+    padding: 14px 0;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #fff;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .save-btn:active{ transform: scale(0.98); }
+  .save-btn:disabled{ opacity: 0.6; cursor: default; }
 
-            <div class="tabs">
-              <button class="tab" id="tab-anne" data-person="anne">Anne</button>
-              <button class="tab" id="tab-teyze" data-person="teyze">Teyze</button>
-            </div>
+  .flash{ text-align:center; font-size:0.85rem; color:var(--sage); font-weight:700; margin-top:10px; min-height: 20px; }
+  .flash.err{ color: var(--coral); }
 
-            <div class="date-nav">
-              <button class="nav-btn" id="prev-day">‹</button>
-              <div>
-                <div class="date-label" id="date-label"></div>
-                <div class="today-pill" id="today-pill" style="display:none;">BUGÜN</div>
-              </div>
-              <button class="nav-btn" id="next-day">›</button>
-            </div>
+  .history-title{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--plum);
+    margin: 34px 0 12px 4px;
+  }
+  .hist-empty{ font-size: 0.85rem; color: var(--ink-soft); padding: 10px 4px; }
+  .hist-item{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .hist-item:hover{ border-color: var(--plum); }
+  .hist-date{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .hist-summary{
+    flex: 1;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hist-actions{ display:flex; gap:6px; align-items:center; }
+  .icon-btn{
+    width: 30px; height: 30px; border-radius: 8px; border: none;
+    background: rgba(46,59,44,0.06);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color: var(--ink-soft); font-size: 0.85rem;
+  }
+  .icon-btn:hover{ background: rgba(46,59,44,0.12); }
+  .icon-btn.danger{ color: var(--coral); }
+  .confirm-row{ display:flex; gap:6px; align-items:center; font-size:0.75rem; color:var(--coral); font-weight:700; white-space:nowrap; }
 
-            <div class="sheet">
-              <span class="spinner" id="spinner" style="display:none;">senkronize ediliyor…</span>
-              <div class="meal-row">
-                <div class="meal-icon" id="icon-breakfast">☀️</div>
-                <div>
-                  <div class="meal-label">Kahvaltı</div>
-                  <input type="text" id="breakfast-desc" placeholder="Ne yedi?">
-                </div>
-                <input type="time" id="breakfast-time">
-              </div>
-              <div class="meal-row">
-                <div class="meal-icon" id="icon-snack">🍃</div>
-                <div>
-                  <div class="meal-label">Ara Öğün</div>
-                  <input type="text" id="snack-desc" placeholder="Ne yedi?">
-                </div>
-                <input type="time" id="snack-time">
-              </div>
-              <div class="meal-row">
-                <div class="meal-icon" id="icon-dinner">🌙</div>
-                <div>
-                  <div class="meal-label">Akşam Yemeği</div>
-                  <input type="text" id="dinner-desc" placeholder="Ne yedi?">
-                </div>
-                <input type="time" id="dinner-time">
-              </div>
-              <div class="sport-row">
-                <div class="meal-icon" id="icon-sport">🚶</div>
-                <div>
-                  <div class="meal-label">Spor / Hareket</div>
-                  <input type="text" id="sport-desc" placeholder="Bugün ne yaptı? (örn. 30 dk yürüyüş)">
-                </div>
-              </div>
+  .spinner{
+    position:absolute; top:16px; right:16px;
+    font-size: 0.7rem; color: var(--ink-soft);
+  }
 
-              <button class="save-btn" id="save-btn">Kaydet</button>
-              <div class="flash" id="flash"></div>
-            </div>
+  @media (prefers-reduced-motion: reduce){ *{ transition: none !important; } }
+</style>
+</head>
+<body>
 
-            <div class="history-title" id="history-title"></div>
-            <div id="history-list"></div>
-          </div>
+<div class="wrap">
+  <h1 class="title">Aile Günlüğü</h1>
+  <p class="subtitle">Yemek saatlerini ve hareketi günlük takip et.</p>
 
-          <script>
+  <div class="setup-banner" id="setup-banner" style="display:none;">
+    ⚠️ Henüz bir Google E-Tablosu bağlantısı ayarlanmadı. Verilerin senin bilgisayarında görünmesi için sayfanın en altındaki <code>SCRIPT_URL</code> değerini kendi Apps Script linkinle değiştirmen gerekiyor.
+  </div>
+
+  <div class="tabs">
+    <button class="tab" id="tab-anne" data-person="anne">Anne</button>
+    <button class="tab" id="tab-teyze" data-person="teyze">Teyze</button>
+  </div>
+
+  <div class="date-nav">
+    <button class="nav-btn" id="prev-day">‹</button>
+    <div>
+      <div class="date-label" id="date-label"></div>
+      <div class="today-pill" id="today-pill" style="display:none;">BUGÜN</div>
+    </div>
+    <button class="nav-btn" id="next-day">›</button>
+  </div>
+
+  <div class="sheet">
+    <span class="spinner" id="spinner" style="display:none;">senkronize ediliyor…</span>
+    <div class="meal-row">
+      <div class="meal-icon" id="icon-breakfast">☀️</div>
+      <div>
+        <div class="meal-label">Kahvaltı</div>
+        <input type="text" id="breakfast-desc" placeholder="Ne yedi?">
+      </div>
+      <input type="time" id="breakfast-time">
+    </div>
+    <div class="meal-row">
+      <div class="meal-icon" id="icon-snack">🍃</div>
+      <div>
+        <div class="meal-label">Ara Öğün</div>
+        <input type="text" id="snack-desc" placeholder="Ne yedi?">
+      </div>
+      <input type="time" id="snack-time">
+    </div>
+    <div class="meal-row">
+      <div class="meal-icon" id="icon-dinner">🌙</div>
+      <div>
+        <div class="meal-label">Akşam Yemeği</div>
+        <input type="text" id="dinner-desc" placeholder="Ne yedi?">
+      </div>
+      <input type="time" id="dinner-time">
+    </div>
+    <div class="sport-row">
+      <div class="meal-icon" id="icon-sport">🚶</div>
+      <div>
+        <div class="meal-label">Spor / Hareket</div>
+        <input type="text" id="sport-desc" placeholder="Bugün ne yaptı? (örn. 30 dk yürüyüş)">
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn">Kaydet</button>
+    <div class="flash" id="flash"></div>
+  </div>
+
+  <div class="history-title" id="history-title"></div>
+  <div id="history-list"></div>
+</div>
+
+<script>
   // =====================================================================
-            // BURAYI DÜZENLE: Google Apps Script Web App linkini aşağıya yapıştır.
-            // Kurulum adımlarını Claude'dan sohbette bulabilirsin.
-            // =====================================================================
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXp2oaILuiVl7dAdpp3QAwRXHOpuxu9RlrPDs07JZsL71e4av1XQcSi1cE50_7wlsKCQ/exec";
-            // =====================================================================
+  // Google Apps Script Web App linki:
+  // =====================================================================
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXp2oaILuiVl7dAdpp3QAwRXHOpuxu9RlrPDs07JZsL71e4av1XQcSi1cE50_7wlsKCQ/exec";
+  // =====================================================================
 
-            const PEOPLE = {
-              anne:  {label: "Anne",  accent: "#C9A227", accentSoft: "#F2E7C4" },
-            teyze: {label: "Teyze", accent: "#5C7A52", accentSoft: "#DCE6D4" },
+  const PEOPLE = {
+    anne:  { label: "Anne",  accent: "#C9A227", accentSoft: "#F2E7C4" },
+    teyze: { label: "Teyze", accent: "#5C7A52", accentSoft: "#DCE6D4" },
   };
 
-            let personId = "anne";
-            let dateKey = toDateKey(new Date());
-            let confirmDeleteKey = null;
-            let allEntries = []; // cache of everything fetched from the sheet
-            const isConfigured = SCRIPT_URL && !SCRIPT_URL.includes("PASTE_YOUR");
+  let personId = "anne";
+  let dateKey = toDateKey(new Date());
+  let confirmDeleteKey = null;
+  let allEntries = [];
+  const isConfigured = SCRIPT_URL && !SCRIPT_URL.includes("PASTE_YOUR");
 
-            function toDateKey(d){
+  function toDateKey(d){
     const y = d.getFullYear();
-            const m = String(d.getMonth()+1).padStart(2,"0");
-            const day = String(d.getDate()).padStart(2,"0");
-            return `${y}-${m}-${day}`;
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const day = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
   }
-            function formatTurkishDate(dkey){
+  function formatTurkishDate(dkey){
     const d = new Date(dkey + "T00:00:00");
-            return d.toLocaleDateString("tr-TR", {day:"numeric", month:"long", weekday:"long" });
+    return d.toLocaleDateString("tr-TR", { day:"numeric", month:"long", weekday:"long" });
   }
-            function formatTurkishShort(dkey){
+  function formatTurkishShort(dkey){
     const d = new Date(dkey + "T00:00:00");
-            return d.toLocaleDateString("tr-TR", {day:"numeric", month:"short" });
+    return d.toLocaleDateString("tr-TR", { day:"numeric", month:"short" });
   }
-            function emptyForm(){ return {breakfast:{desc:"",time:""}, snack:{desc:"",time:""}, dinner:{desc:"",time:""}, sport:"" }; }
+  function emptyForm(){ return { breakfast:{desc:"",time:""}, snack:{desc:"",time:""}, dinner:{desc:"",time:""}, sport:"" }; }
 
-            function rowToForm(row){
+  function rowToForm(row){
     return {
-              breakfast: {desc: row.kahvalti_ne || "", time: row.kahvalti_saat || "" },
-            snack:     {desc: row.araogun_ne || "",  time: row.araogun_saat || "" },
-            dinner:    {desc: row.aksam_ne || "",    time: row.aksam_saat || "" },
-            sport: row.spor || "",
+      breakfast: { desc: row.kahvalti_ne || "", time: row.kahvalti_saat || "" },
+      snack:     { desc: row.araogun_ne || "",  time: row.araogun_saat || "" },
+      dinner:    { desc: row.aksam_ne || "",    time: row.aksam_saat || "" },
+      sport: row.spor || "",
     };
   }
 
-            function setBusy(isBusy){
-              document.getElementById("spinner").style.display = isBusy ? "inline" : "none";
-            document.getElementById("save-btn").disabled = isBusy;
+  function setBusy(isBusy){
+    document.getElementById("spinner").style.display = isBusy ? "inline" : "none";
+    document.getElementById("save-btn").disabled = isBusy;
   }
 
-            function showFlash(msg, isError){
+  function showFlash(msg, isError){
     const flash = document.getElementById("flash");
-            flash.textContent = msg;
-            flash.classList.toggle("err", !!isError);
-            if(!isError){
-              setTimeout(() => { flash.textContent = ""; }, 1800);
+    flash.textContent = msg;
+    flash.classList.toggle("err", !!isError);
+    if(!isError){
+      setTimeout(() => { flash.textContent = ""; }, 1800);
     }
   }
 
-            async function fetchAllEntries(){
+  async function fetchAllEntries(){
     if(!isConfigured) return [];
-            const res = await fetch(SCRIPT_URL, {method: "GET" });
-            if(!res.ok) throw new Error("network");
-            return await res.json();
+    const res = await fetch(SCRIPT_URL, { method: "GET" });
+    if(!res.ok) throw new Error("network");
+    return await res.json();
   }
 
-            function applyDayToForm(){
+  function applyDayToForm(){
     const match = allEntries.find(r => r.kisi === personId && r.tarih === dateKey);
-            const form = match ? rowToForm(match) : emptyForm();
-            document.getElementById("breakfast-desc").value = form.breakfast.desc;
-            document.getElementById("breakfast-time").value = form.breakfast.time;
-            document.getElementById("snack-desc").value = form.snack.desc;
-            document.getElementById("snack-time").value = form.snack.time;
-            document.getElementById("dinner-desc").value = form.dinner.desc;
-            document.getElementById("dinner-time").value = form.dinner.time;
-            document.getElementById("sport-desc").value = form.sport;
+    const form = match ? rowToForm(match) : emptyForm();
+    document.getElementById("breakfast-desc").value = form.breakfast.desc;
+    document.getElementById("breakfast-time").value = form.breakfast.time;
+    document.getElementById("snack-desc").value = form.snack.desc;
+    document.getElementById("snack-time").value = form.snack.time;
+    document.getElementById("dinner-desc").value = form.dinner.desc;
+    document.getElementById("dinner-time").value = form.dinner.time;
+    document.getElementById("sport-desc").value = form.sport;
   }
 
-            async function refreshAll(){
-              setBusy(true);
-            try{
-              allEntries = await fetchAllEntries();
-            applyDayToForm();
-            renderHistory();
+  async function refreshAll(){
+    setBusy(true);
+    try{
+      allEntries = await fetchAllEntries();
+      applyDayToForm();
+      renderHistory();
     }catch(e){
-              showFlash("Veriler alınamadı. Bağlantını kontrol et.", true);
+      showFlash("Veriler alınamadı. Bağlantını kontrol et.", true);
     }finally{
-              setBusy(false);
+      setBusy(false);
     }
   }
 
-            async function saveDay(){
+  // NOT: Google Apps Script'in web app URL'i her istekte yönlendirme (redirect)
+  // yapıyor ve tarayıcı bu yönlendirilmiş cevabı CORS güvenliği yüzünden
+  // okuyamıyor. Bu yüzden POST isteklerini "no-cors" modunda gönderiyoruz:
+  // istek Google'a ulaşıyor ve kaydediliyor, biz sadece cevabı okumuyoruz.
+  async function postToScript(payload){
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async function saveDay(){
     if(!isConfigured){
-              showFlash("Önce SCRIPT_URL ayarlanmalı (yukarıdaki uyarıya bak).", true);
-            return;
+      showFlash("Önce SCRIPT_URL ayarlanmalı (yukarıdaki uyarıya bak).", true);
+      return;
     }
-            const payload = {
-              action: "save",
-            person: personId,
-            date: dateKey,
-            breakfast: {desc: document.getElementById("breakfast-desc").value, time: document.getElementById("breakfast-time").value },
-            snack:     {desc: document.getElementById("snack-desc").value,     time: document.getElementById("snack-time").value },
-            dinner:    {desc: document.getElementById("dinner-desc").value,    time: document.getElementById("dinner-time").value },
-            sport: document.getElementById("sport-desc").value,
+    const payload = {
+      action: "save",
+      person: personId,
+      date: dateKey,
+      breakfast: { desc: document.getElementById("breakfast-desc").value, time: document.getElementById("breakfast-time").value },
+      snack:     { desc: document.getElementById("snack-desc").value,     time: document.getElementById("snack-time").value },
+      dinner:    { desc: document.getElementById("dinner-desc").value,    time: document.getElementById("dinner-time").value },
+      sport: document.getElementById("sport-desc").value,
     };
-            setBusy(true);
-            try{
-              await fetch(SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload),
-              });
-            showFlash("Kaydedildi ✓", false);
-            allEntries = await fetchAllEntries();
-            renderHistory();
+    setBusy(true);
+    try{
+      await postToScript(payload);
+      showFlash("Kaydedildi ✓", false);
+      // Google Sheet'in isteği işlemesi için kısa bir bekleme
+      await new Promise(r => setTimeout(r, 700));
+      allEntries = await fetchAllEntries();
+      renderHistory();
     }catch(e){
-              showFlash("Kaydedilemedi, lütfen tekrar dene.", true);
+      showFlash("Kaydedilemedi, lütfen tekrar dene.", true);
     }finally{
-              setBusy(false);
+      setBusy(false);
     }
   }
 
-            async function deleteDay(dkey){
-              setBusy(true);
-            try{
-              await fetch(SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "delete", person: personId, date: dkey }),
-              });
-            confirmDeleteKey = null;
-            allEntries = await fetchAllEntries();
-            renderHistory();
-            if(dkey === dateKey) applyDayToForm();
+  async function deleteDay(dkey){
+    setBusy(true);
+    try{
+      await postToScript({ action: "delete", person: personId, date: dkey });
+      confirmDeleteKey = null;
+      await new Promise(r => setTimeout(r, 700));
+      allEntries = await fetchAllEntries();
+      renderHistory();
+      if(dkey === dateKey) applyDayToForm();
     }catch(e){
-              showFlash("Silinemedi, lütfen tekrar dene.", true);
+      showFlash("Silinemedi, lütfen tekrar dene.", true);
     }finally{
-              setBusy(false);
+      setBusy(false);
     }
   }
 
-            function renderHeader(){
+  function renderHeader(){
     const p = PEOPLE[personId];
-            document.getElementById("tab-anne").classList.toggle("active", personId==="anne");
-            document.getElementById("tab-teyze").classList.toggle("active", personId==="teyze");
+    document.getElementById("tab-anne").classList.toggle("active", personId==="anne");
+    document.getElementById("tab-teyze").classList.toggle("active", personId==="teyze");
 
-            document.getElementById("date-label").textContent = formatTurkishDate(dateKey);
-            document.getElementById("today-pill").style.display = (dateKey === toDateKey(new Date())) ? "inline-block" : "none";
+    document.getElementById("date-label").textContent = formatTurkishDate(dateKey);
+    document.getElementById("today-pill").style.display = (dateKey === toDateKey(new Date())) ? "inline-block" : "none";
 
     ["breakfast","snack","dinner","sport"].forEach(k=>{
       const el = document.getElementById(`icon-${k}`);
-            el.style.background = p.accentSoft;
-            el.style.color = p.accent;
+      el.style.background = p.accentSoft;
+      el.style.color = p.accent;
     });
-            document.getElementById("save-btn").style.background = p.accent;
-            document.getElementById("history-title").textContent = `Geçmiş Kayıtlar — ${p.label}`;
-            document.getElementById("setup-banner").style.display = isConfigured ? "none" : "block";
+    document.getElementById("save-btn").style.background = p.accent;
+    document.getElementById("history-title").textContent = `Geçmiş Kayıtlar — ${p.label}`;
+    document.getElementById("setup-banner").style.display = isConfigured ? "none" : "block";
   }
 
-            function renderHistory(){
+  function renderHistory(){
     const p = PEOPLE[personId];
-            const list = document.getElementById("history-list");
-            const items = allEntries
+    const list = document.getElementById("history-list");
+    const items = allEntries
       .filter(r => r.kisi === personId)
       .sort((a,b) => a.tarih < b.tarih ? 1 : -1);
 
-            if(items.length === 0){
-              list.innerHTML = `<div class="hist-empty">Henüz kayıt yok. İlk günü kaydedince burada listelenecek.</div>`;
-            return;
+    if(items.length === 0){
+      list.innerHTML = `<div class="hist-empty">Henüz kayıt yok. İlk günü kaydedince burada listelenecek.</div>`;
+      return;
     }
 
-            list.innerHTML = "";
+    list.innerHTML = "";
     items.forEach(row=>{
       const parts = [];
-            if(row.kahvalti_ne) parts.push(`Kahvaltı: ${row.kahvalti_ne}`);
-            if(row.araogun_ne) parts.push(`Ara öğün: ${row.araogun_ne}`);
-            if(row.aksam_ne) parts.push(`Akşam: ${row.aksam_ne}`);
-            if(row.spor) parts.push(`Spor: ${row.spor}`);
-            const summary = parts.length ? parts.join(" · ") : "Boş kayıt";
-            const dkey = row.tarih;
+      if(row.kahvalti_ne) parts.push(`Kahvaltı: ${row.kahvalti_ne}`);
+      if(row.araogun_ne) parts.push(`Ara öğün: ${row.araogun_ne}`);
+      if(row.aksam_ne) parts.push(`Akşam: ${row.aksam_ne}`);
+      if(row.spor) parts.push(`Spor: ${row.spor}`);
+      const summary = parts.length ? parts.join(" · ") : "Boş kayıt";
+      const dkey = row.tarih;
 
-            const rowEl = document.createElement("div");
-            rowEl.className = "hist-item";
+      const rowEl = document.createElement("div");
+      rowEl.className = "hist-item";
 
-            const actionsHtml = confirmDeleteKey === dkey
-            ? `<div class="confirm-row">
-              <span>Emin misin?</span>
-              <button class="icon-btn danger" data-action="confirm-yes" data-date="${dkey}">✓</button>
-              <button class="icon-btn" data-action="confirm-no">✕</button>
-            </div>`
-            : `<button class="icon-btn" data-action="edit" data-date="${dkey}">✎</button>
-            <button class="icon-btn danger" data-action="delete" data-date="${dkey}">✕</button>`;
+      const actionsHtml = confirmDeleteKey === dkey
+        ? `<div class="confirm-row">
+             <span>Emin misin?</span>
+             <button class="icon-btn danger" data-action="confirm-yes" data-date="${dkey}">✓</button>
+             <button class="icon-btn" data-action="confirm-no">✕</button>
+           </div>`
+        : `<button class="icon-btn" data-action="edit" data-date="${dkey}">✎</button>
+           <button class="icon-btn danger" data-action="delete" data-date="${dkey}">✕</button>`;
 
-            rowEl.innerHTML = `
-            <div class="hist-date" style="background:${p.accent}">${formatTurkishShort(dkey)}</div>
-            <div class="hist-summary">${summary}</div>
-            <div class="hist-actions">${actionsHtml}</div>
-            `;
+      rowEl.innerHTML = `
+        <div class="hist-date" style="background:${p.accent}">${formatTurkishShort(dkey)}</div>
+        <div class="hist-summary">${summary}</div>
+        <div class="hist-actions">${actionsHtml}</div>
+      `;
 
       rowEl.addEventListener("click", (e) => {
         if(e.target.closest(".hist-actions")) return;
-            dateKey = dkey;
-            renderHeader();
-            applyDayToForm();
+        dateKey = dkey;
+        renderHeader();
+        applyDayToForm();
       });
 
-            list.appendChild(rowEl);
+      list.appendChild(rowEl);
     });
 
     list.querySelectorAll('[data-action="edit"]').forEach(btn=>{
-              btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                dateKey = btn.dataset.date;
-                renderHeader();
-                applyDayToForm();
-              });
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        dateKey = btn.dataset.date;
+        renderHeader();
+        applyDayToForm();
+      });
     });
     list.querySelectorAll('[data-action="delete"]').forEach(btn=>{
-              btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                confirmDeleteKey = btn.dataset.date;
-                renderHistory();
-              });
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        confirmDeleteKey = btn.dataset.date;
+        renderHistory();
+      });
     });
     list.querySelectorAll('[data-action="confirm-yes"]').forEach(btn=>{
-              btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                deleteDay(btn.dataset.date);
-              });
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        deleteDay(btn.dataset.date);
+      });
     });
     list.querySelectorAll('[data-action="confirm-no"]').forEach(btn=>{
-              btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                confirmDeleteKey = null;
-                renderHistory();
-              });
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        confirmDeleteKey = null;
+        renderHistory();
+      });
     });
   }
 
-  document.getElementById("tab-anne").addEventListener("click", ()=>{personId = "anne"; renderHeader(); applyDayToForm(); renderHistory(); });
-  document.getElementById("tab-teyze").addEventListener("click", ()=>{personId = "teyze"; renderHeader(); applyDayToForm(); renderHistory(); });
+  document.getElementById("tab-anne").addEventListener("click", ()=>{ personId="anne"; renderHeader(); applyDayToForm(); renderHistory(); });
+  document.getElementById("tab-teyze").addEventListener("click", ()=>{ personId="teyze"; renderHeader(); applyDayToForm(); renderHistory(); });
 
   document.getElementById("prev-day").addEventListener("click", ()=>{
     const d = new Date(dateKey + "T00:00:00");
-            d.setDate(d.getDate()-1);
-            dateKey = toDateKey(d);
-            renderHeader(); applyDayToForm();
+    d.setDate(d.getDate()-1);
+    dateKey = toDateKey(d);
+    renderHeader(); applyDayToForm();
   });
   document.getElementById("next-day").addEventListener("click", ()=>{
     const d = new Date(dateKey + "T00:00:00");
-            d.setDate(d.getDate()+1);
-            dateKey = toDateKey(d);
-            renderHeader(); applyDayToForm();
+    d.setDate(d.getDate()+1);
+    dateKey = toDateKey(d);
+    renderHeader(); applyDayToForm();
   });
 
-            document.getElementById("save-btn").addEventListener("click", saveDay);
+  document.getElementById("save-btn").addEventListener("click", saveDay);
 
-            renderHeader();
-            if(isConfigured){
-              refreshAll();
+  renderHeader();
+  if(isConfigured){
+    refreshAll();
   }
-          </script>
+</script>
 
-        </body>
-      </html>
+</body>
+</html>
+
