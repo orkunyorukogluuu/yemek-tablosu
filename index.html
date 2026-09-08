@@ -5,596 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aile Günlüğü</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap');
-
-  :root{
-    --paper: #F1F4EC;
-    --paper-card: #FFFFFF;
-    --ink: #2E3B2C;
-    --ink-soft: rgba(46,59,44,0.55);
-    --plum: #6B4A63;
-    --gold: #C9A227;
-    --gold-soft: #F2E7C4;
-    --sage: #5C7A52;
-    --sage-soft: #DCE6D4;
-    --coral: #C8695A;
-    --line: rgba(46,59,44,0.14);
-  }
-
-  *{ box-sizing: border-box; }
-
-  body{
-    margin:0;
-    background: var(--paper);
-    font-family: 'Nunito', sans-serif;
-    color: var(--ink);
-  }
-
-  .wrap{
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 28px 18px 60px 18px;
-  }
-
-  .title{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 1.7rem;
-    color: var(--plum);
-    margin: 0 0 4px 0;
-    letter-spacing: -0.01em;
-  }
-  .subtitle{
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    margin: 0 0 22px 0;
-  }
-
-  .setup-banner{
-    background: #FCEFEA;
-    border: 1px solid var(--coral);
-    color: var(--coral);
-    border-radius: 14px;
-    padding: 14px 16px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-
-  .tabs{
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .tab{
-    flex: 1;
-    border: 2px solid var(--line);
-    cursor: pointer;
-    padding: 12px 0;
-    border-radius: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 0.98rem;
-    transition: all 0.2s ease;
-    background: #fff;
-    color: var(--ink-soft);
-  }
-  .tab.active{ color: #fff; border-color: transparent; }
-  .tab.active[data-person="anne"]{ background: var(--gold); }
-  .tab.active[data-person="teyze"]{ background: var(--sage); }
-
-  .date-nav{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-  .date-label{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: var(--ink);
-    text-transform: capitalize;
-    text-align: center;
-  }
-  .today-pill{
-    display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    color: var(--sage);
-    background: rgba(92,122,82,0.12);
-    padding: 2px 8px;
-    border-radius: 20px;
-    margin-top: 4px;
-  }
-  .nav-btn{
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--line);
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--ink);
-    transition: border-color 0.2s;
-    font-size: 1.1rem;
-  }
-  .nav-btn:hover{ border-color: var(--plum); }
-  .nav-btn:disabled{ opacity: 0.4; cursor: default; }
-
-  .sheet{
-    background: var(--paper-card);
-    border-radius: 22px;
-    padding: 22px 20px;
-    box-shadow: 0 14px 40px -22px rgba(46,59,44,0.35);
-    border: 1px solid var(--line);
-    position: relative;
-  }
-
-  .meal-row{
-    display: grid;
-    grid-template-columns: 34px 1fr 92px;
-    gap: 10px;
-    align-items: center;
-    padding: 14px 0;
-    border-bottom: 1px dashed var(--line);
-  }
-  .meal-row:first-child{ padding-top: 2px; }
-  .meal-icon{
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-  }
-  .meal-label{
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-  }
-  input[type="text"], input[type="time"]{
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid var(--line);
-    background: transparent;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem;
-    color: var(--ink);
-    padding: 6px 2px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  input[type="text"]:focus, input[type="time"]:focus{ border-color: var(--plum); }
-  input[type="time"]{ font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
-  input::placeholder{ color: rgba(46,59,44,0.32); }
-  input:disabled{ opacity: 0.5; }
-
-  .sport-row{
-    display: grid;
-    grid-template-columns: 34px 1fr;
-    gap: 10px;
-    align-items: center;
-    padding: 16px 0 4px 0;
-  }
-
-  .save-btn{
-    width: 100%;
-    margin-top: 18px;
-    border: none;
-    cursor: pointer;
-    padding: 14px 0;
-    border-radius: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    color: #fff;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  .save-btn:active{ transform: scale(0.98); }
-  .save-btn:disabled{ opacity: 0.6; cursor: default; }
-
-  .flash{ text-align:center; font-size:0.85rem; color:var(--sage); font-weight:700; margin-top:10px; min-height: 20px; }
-  .flash.err{ color: var(--coral); }
-
-  .history-title{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--plum);
-    margin: 34px 0 12px 4px;
-  }
-  .hist-empty{ font-size: 0.85rem; color: var(--ink-soft); padding: 10px 4px; }
-  .hist-item{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .hist-item:hover{ border-color: var(--plum); }
-  .hist-date{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    color: #fff;
-    padding: 6px 8px;
-    border-radius: 8px;
-    white-space: nowrap;
-  }
-  .hist-summary{
-    flex: 1;
-    font-size: 0.82rem;
-    color: var(--ink-soft);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .hist-actions{ display:flex; gap:6px; align-items:center; }
-  .icon-btn{
-    width: 30px; height: 30px; border-radius: 8px; border: none;
-    background: rgba(46,59,44,0.06);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; color: var(--ink-soft); font-size: 0.85rem;
-  }
-  .icon-btn:hover{ background: rgba(46,59,44,0.12); }
-  .icon-btn.danger{ color: var(--coral); }
-  .confirm-row{ display:flex; gap:6px; align-items:center; font-size:0.75rem; color:var(--coral); font-weight:700; white-space:nowrap; }
-
-  .spinner{
-    position:absolute; top:16px; right:16px;
-    font-size: 0.7rem; color: var(--ink-soft);
-  }
-
-  @media (prefers-reduced-motion: reduce){ *{ transition: none !important; } }
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap');
+:root{--paper:#F1F4EC;--paper-card:#FFF;--ink:#2E3B2C;--ink-soft:rgba(46,59,44,.55);--plum:#6B4A63;--gold:#C9A227;--gold-soft:#F2E7C4;--sage:#5C7A52;--sage-soft:#DCE6D4;--coral:#C8695A;--line:rgba(46,59,44,.14)}
+*{box-sizing:border-box} body{margin:0;background:var(--paper);font-family:Nunito,sans-serif;color:var(--ink)}
+.wrap{max-width:640px;margin:0 auto;padding:28px 18px 60px}.title{font-family:Fraunces,serif;font-weight:600;font-size:1.7rem;color:var(--plum);margin:0 0 4px}.subtitle{font-size:.85rem;color:var(--ink-soft);margin:0 0 22px}
+.setup-banner{background:#FCEFEA;border:1px solid var(--coral);color:var(--coral);border-radius:14px;padding:14px 16px;font-size:.82rem;font-weight:700;margin-bottom:20px;line-height:1.5}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}.tab{border:2px solid var(--line);cursor:pointer;padding:12px 4px;border-radius:14px;font-family:Nunito,sans-serif;font-weight:800;font-size:.92rem;background:#fff;color:var(--ink-soft);transition:all .2s}.tab.active{color:#fff;border-color:transparent}
+.date-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.date-label{font-family:Fraunces,serif;font-weight:600;font-size:1.15rem;color:var(--ink);text-transform:capitalize;text-align:center}.today-pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:var(--sage);background:rgba(92,122,82,.12);padding:2px 8px;border-radius:20px;margin-top:4px}.nav-btn{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);font-size:1.1rem}.nav-btn:hover{border-color:var(--plum)}
+.sheet{background:var(--paper-card);border-radius:22px;padding:22px 20px;box-shadow:0 14px 40px -22px rgba(46,59,44,.35);border:1px solid var(--line);position:relative}.meal-row{display:grid;grid-template-columns:34px 1fr 92px;gap:10px;align-items:center;padding:14px 0;border-bottom:1px dashed var(--line)}.meal-row:first-child{padding-top:2px}.meal-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}.meal-label{font-size:.72rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}input[type=text],input[type=time]{width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;font-family:Nunito,sans-serif;font-size:.95rem;color:var(--ink);padding:6px 2px;outline:none}input[type=text]:focus,input[type=time]:focus{border-color:var(--plum)}input[type=time]{font-family:'IBM Plex Mono',monospace;font-size:.85rem}input::placeholder{color:rgba(46,59,44,.32)}
+.sport-row{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:16px 0 4px}.save-btn{width:100%;margin-top:18px;border:none;cursor:pointer;padding:14px 0;border-radius:14px;font-family:Nunito,sans-serif;font-weight:800;font-size:1rem;color:#fff}.save-btn:active{transform:scale(.98)}.save-btn:disabled{opacity:.6;cursor:default}.flash{text-align:center;font-size:.85rem;color:var(--sage);font-weight:700;margin-top:10px;min-height:20px}.flash.err{color:var(--coral)}
+.day-summary,.history-title{font-family:Fraunces,serif;font-weight:600;font-size:1.05rem;color:var(--plum);margin:28px 0 12px 4px}.day-summary-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:.86rem}.day-summary-card p{margin:6px 0}.day-summary-card strong{color:var(--ink)}.muted,.hist-empty{font-size:.85rem;color:var(--ink-soft)}
+.hist-item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer}.hist-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#fff;padding:6px 8px;border-radius:8px;white-space:nowrap}.hist-summary{flex:1;font-size:.82rem;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hist-actions{display:flex;gap:6px;align-items:center}.icon-btn{width:30px;height:30px;border-radius:8px;border:none;background:rgba(46,59,44,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);font-size:.85rem}.icon-btn.danger{color:var(--coral)}.confirm-row{display:flex;gap:6px;align-items:center;font-size:.75rem;color:var(--coral);font-weight:700;white-space:nowrap}.spinner{position:absolute;top:16px;right:16px;font-size:.7rem;color:var(--ink-soft)}
+@media(max-width:430px){.tabs{gap:5px}.tab{font-size:.78rem;padding:11px 2px}.meal-row{grid-template-columns:34px 1fr 82px}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <h1 class="title">Aile Günlüğü</h1>
   <p class="subtitle">Yemek saatlerini ve hareketi günlük takip et.</p>
-
-  <div class="setup-banner" id="setup-banner" style="display:none;">
-    ⚠️ Henüz bir Google E-Tablosu bağlantısı ayarlanmadı. Verilerin senin bilgisayarında görünmesi için sayfanın en altındaki <code>SCRIPT_URL</code> değerini kendi Apps Script linkinle değiştirmen gerekiyor.
+  <div class="setup-banner" id="setup-banner" style="display:none">⚠️ Henüz bir Google E-Tablosu bağlantısı ayarlanmadı.</div>
+  <div class="tabs" id="tabs"></div>
+  <div class="date-nav"><button class="nav-btn" id="prev-day">‹</button><div><div class="date-label" id="date-label"></div><div class="today-pill" id="today-pill" style="display:none">BUGÜN</div></div><button class="nav-btn" id="next-day">›</button></div>
+  <div class="sheet"><span class="spinner" id="spinner" style="display:none">senkronize ediliyor…</span>
+    <div class="meal-row"><div class="meal-icon" id="icon-breakfast">☀️</div><div><div class="meal-label">Kahvaltı</div><input type="text" id="breakfast-desc" placeholder="Ne yedi?"></div><input type="time" id="breakfast-time"></div>
+    <div class="meal-row"><div class="meal-icon" id="icon-snack">🍃</div><div><div class="meal-label">Ara Öğün</div><input type="text" id="snack-desc" placeholder="Ne yedi?"></div><input type="time" id="snack-time"></div>
+    <div class="meal-row"><div class="meal-icon" id="icon-dinner">🌙</div><div><div class="meal-label">Akşam Yemeği</div><input type="text" id="dinner-desc" placeholder="Ne yedi?"></div><input type="time" id="dinner-time"></div>
+    <div class="sport-row"><div class="meal-icon" id="icon-sport">🚶</div><div><div class="meal-label">Spor / Hareket</div><input type="text" id="sport-desc" placeholder="Bugün ne yaptı?"></div></div>
+    <button class="save-btn" id="save-btn">Kaydet</button><div class="flash" id="flash"></div>
   </div>
-
-  <div class="tabs">
-    <button class="tab" id="tab-anne" data-person="anne">Anne</button>
-    <button class="tab" id="tab-teyze" data-person="teyze">Teyze</button>
-  </div>
-
-  <div class="date-nav">
-    <button class="nav-btn" id="prev-day">‹</button>
-    <div>
-      <div class="date-label" id="date-label"></div>
-      <div class="today-pill" id="today-pill" style="display:none;">BUGÜN</div>
-    </div>
-    <button class="nav-btn" id="next-day">›</button>
-  </div>
-
-  <div class="sheet">
-    <span class="spinner" id="spinner" style="display:none;">senkronize ediliyor…</span>
-    <div class="meal-row">
-      <div class="meal-icon" id="icon-breakfast">☀️</div>
-      <div>
-        <div class="meal-label">Kahvaltı</div>
-        <input type="text" id="breakfast-desc" placeholder="Ne yedi?">
-      </div>
-      <input type="time" id="breakfast-time">
-    </div>
-    <div class="meal-row">
-      <div class="meal-icon" id="icon-snack">🍃</div>
-      <div>
-        <div class="meal-label">Ara Öğün</div>
-        <input type="text" id="snack-desc" placeholder="Ne yedi?">
-      </div>
-      <input type="time" id="snack-time">
-    </div>
-    <div class="meal-row">
-      <div class="meal-icon" id="icon-dinner">🌙</div>
-      <div>
-        <div class="meal-label">Akşam Yemeği</div>
-        <input type="text" id="dinner-desc" placeholder="Ne yedi?">
-      </div>
-      <input type="time" id="dinner-time">
-    </div>
-    <div class="sport-row">
-      <div class="meal-icon" id="icon-sport">🚶</div>
-      <div>
-        <div class="meal-label">Spor / Hareket</div>
-        <input type="text" id="sport-desc" placeholder="Bugün ne yaptı? (örn. 30 dk yürüyüş)">
-      </div>
-    </div>
-
-    <button class="save-btn" id="save-btn">Kaydet</button>
-    <div class="flash" id="flash"></div>
-  </div>
-
-  <div class="history-title" id="history-title"></div>
-  <div id="history-list"></div>
+  <div class="day-summary">Günün Yemekleri</div><div class="day-summary-card" id="day-summary-card"></div>
+  <div class="history-title" id="history-title"></div><div id="history-list"></div>
 </div>
-
 <script>
-  // =====================================================================
-  // Google Apps Script Web App linki:
-  // =====================================================================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXp2oaILuiVl7dAdpp3QAwRXHOpuxu9RlrPDs07JZsL71e4av1XQcSi1cE50_7wlsKCQ/exec";
-  // =====================================================================
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwXp2oaILuiVl7dAdpp3QAwRXHOpuxu9RlrPDs07JZsL71e4av1XQcSi1cE50_7wlsKCQ/exec';
+const PEOPLE={anne:{label:'İlknur',accent:'#C9A227',accentSoft:'#F2E7C4'},teyze:{label:'Oya',accent:'#5C7A52',accentSoft:'#DCE6D4'},altug:{label:'Altuğ',accent:'#6B4A63',accentSoft:'#E8DCE5'},rana:{label:'Rana',accent:'#C8695A',accentSoft:'#FCEFEA'}};
+let personId='anne',dateKey=toDateKey(new Date()),confirmDeleteKey=null,allEntries=[];
+const isConfigured=SCRIPT_URL&&!SCRIPT_URL.includes('PASTE_YOUR');
+const $=id=>document.getElementById(id);
+function toDateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function normalizeDateKey(value){
+  if(value instanceof Date&&!isNaN(value))return toDateKey(value);
+  if(typeof value==='number'){const d=new Date(value);if(!isNaN(d))return toDateKey(d)}
+  if(!value)return '';
+  const s=String(value).trim();
+  let m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);if(m)return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+  m=s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);if(m)return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
+  const d=new Date(s);return isNaN(d)?'':toDateKey(d);
+}
+function validDateKey(k){return /^\d{4}-\d{2}-\d{2}$/.test(k)&&!isNaN(new Date(`${k}T00:00:00`))}
+function formatTurkishDate(k){const d=new Date(`${normalizeDateKey(k)}T00:00:00`);return isNaN(d)?'Tarih seçilemedi':d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'})}
+function formatTurkishShort(k){const d=new Date(`${normalizeDateKey(k)}T00:00:00`);return isNaN(d)?'—':d.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})}
+function emptyForm(){return{breakfast:{desc:'',time:''},snack:{desc:'',time:''},dinner:{desc:'',time:''},sport:''}}
+function field(row,...keys){for(const k of keys)if(row[k]!==undefined&&row[k]!==null)return String(row[k]);return ''}
+function rowToForm(row){return{breakfast:{desc:field(row,'kahvalti_ne','breakfast_desc'),time:field(row,'kahvalti_saat','breakfast_time')},snack:{desc:field(row,'araogun_ne','snack_desc'),time:field(row,'araogun_saat','snack_time')},dinner:{desc:field(row,'aksam_ne','dinner_desc'),time:field(row,'aksam_saat','dinner_time')},sport:field(row,'spor','sport')}}
+function currentForm(){return{breakfast:{desc:$('breakfast-desc').value,time:$('breakfast-time').value},snack:{desc:$('snack-desc').value,time:$('snack-time').value},dinner:{desc:$('dinner-desc').value,time:$('dinner-time').value},sport:$('sport-desc').value}}
+function setBusy(v){$('spinner').style.display=v?'inline':'none';$('save-btn').disabled=v}
+function showFlash(m,err){$('flash').textContent=m;$('flash').classList.toggle('err',!!err);if(!err)setTimeout(()=>$('flash').textContent='',1800)}
+function renderTabs(){const tabs=$('tabs');tabs.innerHTML='';Object.entries(PEOPLE).forEach(([id,p])=>{const b=document.createElement('button');b.className='tab'+(id===personId?' active':'');b.textContent=p.label;b.dataset.person=id;b.style.background=id===personId?p.accent:'#fff';b.style.color=id===personId?'#fff':'var(--ink-soft)';b.onclick=()=>{personId=id;confirmDeleteKey=null;renderHeader();applyDayToForm();renderHistory()};tabs.appendChild(b)})}
+function renderDaySummary(){const f=currentForm();const rows=[['Kahvaltı',f.breakfast.desc,f.breakfast.time],['Ara Öğün',f.snack.desc,f.snack.time],['Akşam Yemeği',f.dinner.desc,f.dinner.time],['Spor / Hareket',f.sport,'']].filter(x=>x[1]);$('day-summary-card').innerHTML=rows.length?rows.map(x=>`<p><strong>${x[0]}:</strong> ${escapeHtml(x[1])}${x[2]?` <span class="muted">(${x[2]})</span>`:''}</p>`).join(''):'<span class="muted">Bugün henüz yemek veya hareket girilmedi.</span>'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function applyDayToForm(){const match=allEntries.find(r=>field(r,'kisi','person')===personId&&normalizeDateKey(field(r,'tarih','date'))===dateKey);const f=match?rowToForm(match):emptyForm();$('breakfast-desc').value=f.breakfast.desc;$('breakfast-time').value=f.breakfast.time;$('snack-desc').value=f.snack.desc;$('snack-time').value=f.snack.time;$('dinner-desc').value=f.dinner.desc;$('dinner-time').value=f.dinner.time;$('sport-desc').value=f.sport;renderDaySummary()}
+function renderHeader(){const p=PEOPLE[personId];renderTabs();$('date-label').textContent=formatTurkishDate(dateKey);$('today-pill').style.display=dateKey===toDateKey(new Date())?'inline-block':'none';['breakfast','snack','dinner','sport'].forEach(k=>{$(`icon-${k}`).style.background=p.accentSoft;$(`icon-${k}`).style.color=p.accent});$('save-btn').style.background=p.accent;$('history-title').textContent=`Geçmiş Kayıtlar — ${p.label}`;$('setup-banner').style.display=isConfigured?'none':'block'}
+async function fetchAllEntries(){if(!isConfigured)return[];const r=await fetch(SCRIPT_URL);if(!r.ok)throw Error('network');const data=await r.json();return Array.isArray(data)?data:[]}
+async function refreshAll(){setBusy(true);try{allEntries=await fetchAllEntries();applyDayToForm();renderHistory()}catch(e){showFlash('Veriler alınamadı. Bağlantını kontrol et.',true)}finally{setBusy(false)}}
+async function postToScript(payload){await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})}
+async function saveDay(){
+  if(!isConfigured){showFlash('Önce SCRIPT_URL ayarlanmalı.',true);return}
+  const f=currentForm();
+  const payload={action:'save',person:personId,date:dateKey,breakfast:f.breakfast,snack:f.snack,dinner:f.dinner,sport:f.sport};
+  setBusy(true);
+  try{
+    // POST no-cors is opaque, but a completed fetch means the request was sent.
+    await postToScript(payload);
+    const old=allEntries.findIndex(r=>field(r,'kisi','person')===personId&&normalizeDateKey(field(r,'tarih','date'))===dateKey);
+    const saved={kisi:personId,tarih:dateKey,kahvalti_ne:f.breakfast.desc,kahvalti_saat:f.breakfast.time,araogun_ne:f.snack.desc,araogun_saat:f.snack.time,aksam_ne:f.dinner.desc,aksam_saat:f.dinner.time,spor:f.sport};
+    if(old>=0)allEntries[old]=saved;else allEntries.push(saved);
+    showFlash('Kaydedildi ✓',false);
+    renderDaySummary();
+    renderHistory();
 
-  const PEOPLE = {
-    anne:  { label: "Anne",  accent: "#C9A227", accentSoft: "#F2E7C4" },
-    teyze: { label: "Teyze", accent: "#5C7A52", accentSoft: "#DCE6D4" },
-  };
-
-  let personId = "anne";
-  let dateKey = toDateKey(new Date());
-  let confirmDeleteKey = null;
-  let allEntries = [];
-  const isConfigured = SCRIPT_URL && !SCRIPT_URL.includes("PASTE_YOUR");
-
-  function toDateKey(d){
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-  function formatTurkishDate(dkey){
-    const d = new Date(dkey + "T00:00:00");
-    return d.toLocaleDateString("tr-TR", { day:"numeric", month:"long", weekday:"long" });
-  }
-  function formatTurkishShort(dkey){
-    const d = new Date(dkey + "T00:00:00");
-    return d.toLocaleDateString("tr-TR", { day:"numeric", month:"short" });
-  }
-  function emptyForm(){ return { breakfast:{desc:"",time:""}, snack:{desc:"",time:""}, dinner:{desc:"",time:""}, sport:"" }; }
-
-  function rowToForm(row){
-    return {
-      breakfast: { desc: row.kahvalti_ne || "", time: row.kahvalti_saat || "" },
-      snack:     { desc: row.araogun_ne || "",  time: row.araogun_saat || "" },
-      dinner:    { desc: row.aksam_ne || "",    time: row.aksam_saat || "" },
-      sport: row.spor || "",
-    };
-  }
-
-  function setBusy(isBusy){
-    document.getElementById("spinner").style.display = isBusy ? "inline" : "none";
-    document.getElementById("save-btn").disabled = isBusy;
-  }
-
-  function showFlash(msg, isError){
-    const flash = document.getElementById("flash");
-    flash.textContent = msg;
-    flash.classList.toggle("err", !!isError);
-    if(!isError){
-      setTimeout(() => { flash.textContent = ""; }, 1800);
-    }
-  }
-
-  async function fetchAllEntries(){
-    if(!isConfigured) return [];
-    const res = await fetch(SCRIPT_URL, { method: "GET" });
-    if(!res.ok) throw new Error("network");
-    return await res.json();
-  }
-
-  function applyDayToForm(){
-    const match = allEntries.find(r => r.kisi === personId && r.tarih === dateKey);
-    const form = match ? rowToForm(match) : emptyForm();
-    document.getElementById("breakfast-desc").value = form.breakfast.desc;
-    document.getElementById("breakfast-time").value = form.breakfast.time;
-    document.getElementById("snack-desc").value = form.snack.desc;
-    document.getElementById("snack-time").value = form.snack.time;
-    document.getElementById("dinner-desc").value = form.dinner.desc;
-    document.getElementById("dinner-time").value = form.dinner.time;
-    document.getElementById("sport-desc").value = form.sport;
-  }
-
-  async function refreshAll(){
-    setBusy(true);
-    try{
-      allEntries = await fetchAllEntries();
-      applyDayToForm();
-      renderHistory();
-    }catch(e){
-      showFlash("Veriler alınamadı. Bağlantını kontrol et.", true);
-    }finally{
-      setBusy(false);
-    }
-  }
-
-  // NOT: Google Apps Script'in web app URL'i her istekte yönlendirme (redirect)
-  // yapıyor ve tarayıcı bu yönlendirilmiş cevabı CORS güvenliği yüzünden
-  // okuyamıyor. Bu yüzden POST isteklerini "no-cors" modunda gönderiyoruz:
-  // istek Google'a ulaşıyor ve kaydediliyor, biz sadece cevabı okumuyoruz.
-  async function postToScript(payload){
-    await fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
-    });
-  }
-
-  async function saveDay(){
-    if(!isConfigured){
-      showFlash("Önce SCRIPT_URL ayarlanmalı (yukarıdaki uyarıya bak).", true);
-      return;
-    }
-    const payload = {
-      action: "save",
-      person: personId,
-      date: dateKey,
-      breakfast: { desc: document.getElementById("breakfast-desc").value, time: document.getElementById("breakfast-time").value },
-      snack:     { desc: document.getElementById("snack-desc").value,     time: document.getElementById("snack-time").value },
-      dinner:    { desc: document.getElementById("dinner-desc").value,    time: document.getElementById("dinner-time").value },
-      sport: document.getElementById("sport-desc").value,
-    };
-    setBusy(true);
-    try{
-      await postToScript(payload);
-      showFlash("Kaydedildi ✓", false);
-      // Google Sheet'in isteği işlemesi için kısa bir bekleme
-      await new Promise(r => setTimeout(r, 700));
-      allEntries = await fetchAllEntries();
-      renderHistory();
-    }catch(e){
-      showFlash("Kaydedilemedi, lütfen tekrar dene.", true);
-    }finally{
-      setBusy(false);
-    }
-  }
-
-  async function deleteDay(dkey){
-    setBusy(true);
-    try{
-      await postToScript({ action: "delete", person: personId, date: dkey });
-      confirmDeleteKey = null;
-      await new Promise(r => setTimeout(r, 700));
-      allEntries = await fetchAllEntries();
-      renderHistory();
-      if(dkey === dateKey) applyDayToForm();
-    }catch(e){
-      showFlash("Silinemedi, lütfen tekrar dene.", true);
-    }finally{
-      setBusy(false);
-    }
-  }
-
-  function renderHeader(){
-    const p = PEOPLE[personId];
-    document.getElementById("tab-anne").classList.toggle("active", personId==="anne");
-    document.getElementById("tab-teyze").classList.toggle("active", personId==="teyze");
-
-    document.getElementById("date-label").textContent = formatTurkishDate(dateKey);
-    document.getElementById("today-pill").style.display = (dateKey === toDateKey(new Date())) ? "inline-block" : "none";
-
-    ["breakfast","snack","dinner","sport"].forEach(k=>{
-      const el = document.getElementById(`icon-${k}`);
-      el.style.background = p.accentSoft;
-      el.style.color = p.accent;
-    });
-    document.getElementById("save-btn").style.background = p.accent;
-    document.getElementById("history-title").textContent = `Geçmiş Kayıtlar — ${p.label}`;
-    document.getElementById("setup-banner").style.display = isConfigured ? "none" : "block";
-  }
-
-  function renderHistory(){
-    const p = PEOPLE[personId];
-    const list = document.getElementById("history-list");
-    const items = allEntries
-      .filter(r => r.kisi === personId)
-      .sort((a,b) => a.tarih < b.tarih ? 1 : -1);
-
-    if(items.length === 0){
-      list.innerHTML = `<div class="hist-empty">Henüz kayıt yok. İlk günü kaydedince burada listelenecek.</div>`;
-      return;
-    }
-
-    list.innerHTML = "";
-    items.forEach(row=>{
-      const parts = [];
-      if(row.kahvalti_ne) parts.push(`Kahvaltı: ${row.kahvalti_ne}`);
-      if(row.araogun_ne) parts.push(`Ara öğün: ${row.araogun_ne}`);
-      if(row.aksam_ne) parts.push(`Akşam: ${row.aksam_ne}`);
-      if(row.spor) parts.push(`Spor: ${row.spor}`);
-      const summary = parts.length ? parts.join(" · ") : "Boş kayıt";
-      const dkey = row.tarih;
-
-      const rowEl = document.createElement("div");
-      rowEl.className = "hist-item";
-
-      const actionsHtml = confirmDeleteKey === dkey
-        ? `<div class="confirm-row">
-             <span>Emin misin?</span>
-             <button class="icon-btn danger" data-action="confirm-yes" data-date="${dkey}">✓</button>
-             <button class="icon-btn" data-action="confirm-no">✕</button>
-           </div>`
-        : `<button class="icon-btn" data-action="edit" data-date="${dkey}">✎</button>
-           <button class="icon-btn danger" data-action="delete" data-date="${dkey}">✕</button>`;
-
-      rowEl.innerHTML = `
-        <div class="hist-date" style="background:${p.accent}">${formatTurkishShort(dkey)}</div>
-        <div class="hist-summary">${summary}</div>
-        <div class="hist-actions">${actionsHtml}</div>
-      `;
-
-      rowEl.addEventListener("click", (e) => {
-        if(e.target.closest(".hist-actions")) return;
-        dateKey = dkey;
-        renderHeader();
-        applyDayToForm();
-      });
-
-      list.appendChild(rowEl);
-    });
-
-    list.querySelectorAll('[data-action="edit"]').forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        dateKey = btn.dataset.date;
-        renderHeader();
-        applyDayToForm();
-      });
-    });
-    list.querySelectorAll('[data-action="delete"]').forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        confirmDeleteKey = btn.dataset.date;
-        renderHistory();
-      });
-    });
-    list.querySelectorAll('[data-action="confirm-yes"]').forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        deleteDay(btn.dataset.date);
-      });
-    });
-    list.querySelectorAll('[data-action="confirm-no"]').forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        confirmDeleteKey = null;
-        renderHistory();
-      });
-    });
-  }
-
-  document.getElementById("tab-anne").addEventListener("click", ()=>{ personId="anne"; renderHeader(); applyDayToForm(); renderHistory(); });
-  document.getElementById("tab-teyze").addEventListener("click", ()=>{ personId="teyze"; renderHeader(); applyDayToForm(); renderHistory(); });
-
-  document.getElementById("prev-day").addEventListener("click", ()=>{
-    const d = new Date(dateKey + "T00:00:00");
-    d.setDate(d.getDate()-1);
-    dateKey = toDateKey(d);
-    renderHeader(); applyDayToForm();
-  });
-  document.getElementById("next-day").addEventListener("click", ()=>{
-    const d = new Date(dateKey + "T00:00:00");
-    d.setDate(d.getDate()+1);
-    dateKey = toDateKey(d);
-    renderHeader(); applyDayToForm();
-  });
-
-  document.getElementById("save-btn").addEventListener("click", saveDay);
-
-  renderHeader();
-  if(isConfigured){
-    refreshAll();
-  }
+    // Refresh independently. A GET/CORS failure must not turn a successful save into an error.
+    await new Promise(r=>setTimeout(r,700));
+    try{allEntries=await fetchAllEntries();renderHistory();applyDayToForm()}
+    catch(e){console.warn('Kayıt yenileme başarısız; ekrandaki kayıt korunuyor.',e)}
+  }catch(e){
+    console.error('Kayıt isteği başarısız:',e);
+    showFlash('Kaydedilemedi, lütfen tekrar dene.',true)
+  }finally{setBusy(false)}
+}
+async function deleteDay(dkey){setBusy(true);try{await postToScript({action:'delete',person:personId,date:dkey});allEntries=allEntries.filter(r=>!(field(r,'kisi','person')===personId&&normalizeDateKey(field(r,'tarih','date'))===dkey));confirmDeleteKey=null;renderHistory();if(dkey===dateKey)applyDayToForm()}catch(e){showFlash('Silinemedi, lütfen tekrar dene.',true)}finally{setBusy(false)}}
+function renderHistory(){const p=PEOPLE[personId],list=$('history-list');const items=allEntries.filter(r=>field(r,'kisi','person')===personId).map(r=>({...r,_date:normalizeDateKey(field(r,'tarih','date'))})).filter(r=>validDateKey(r._date)).sort((a,b)=>b._date.localeCompare(a._date));if(!items.length){list.innerHTML='<div class="hist-empty">Henüz kayıt yok. İlk günü kaydedince burada listelenecek.</div>';return}list.innerHTML='';items.forEach(row=>{const f=rowToForm(row),parts=[];if(f.breakfast.desc)parts.push(`Kahvaltı: ${f.breakfast.desc}`);if(f.snack.desc)parts.push(`Ara öğün: ${f.snack.desc}`);if(f.dinner.desc)parts.push(`Akşam: ${f.dinner.desc}`);if(f.sport)parts.push(`Spor: ${f.sport}`);const dkey=row._date,el=document.createElement('div');el.className='hist-item';const actions=confirmDeleteKey===dkey?`<div class="confirm-row"><span>Emin misin?</span><button class="icon-btn danger" data-action="confirm-yes" data-date="${dkey}">✓</button><button class="icon-btn" data-action="confirm-no">✕</button></div>`:`<button class="icon-btn" data-action="edit" data-date="${dkey}">✎</button><button class="icon-btn danger" data-action="delete" data-date="${dkey}">✕</button>`;el.innerHTML=`<div class="hist-date" style="background:${p.accent}">${formatTurkishShort(dkey)}</div><div class="hist-summary">${escapeHtml(parts.length?parts.join(' · '):'Boş kayıt')}</div><div class="hist-actions">${actions}</div>`;el.onclick=e=>{if(e.target.closest('.hist-actions'))return;dateKey=dkey;renderHeader();applyDayToForm()};list.appendChild(el)});list.querySelectorAll('[data-action="edit"]').forEach(b=>b.onclick=e=>{e.stopPropagation();dateKey=b.dataset.date;renderHeader();applyDayToForm()});list.querySelectorAll('[data-action="delete"]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirmDeleteKey=b.dataset.date;renderHistory()});list.querySelectorAll('[data-action="confirm-yes"]').forEach(b=>b.onclick=e=>{e.stopPropagation();deleteDay(b.dataset.date)});list.querySelectorAll('[data-action="confirm-no"]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirmDeleteKey=null;renderHistory()})}
+function moveDay(amount){const d=new Date(`${dateKey}T00:00:00`);d.setDate(d.getDate()+amount);dateKey=toDateKey(d);renderHeader();applyDayToForm()}
+['breakfast-desc','breakfast-time','snack-desc','snack-time','dinner-desc','dinner-time','sport-desc'].forEach(id=>$(id).addEventListener('input',renderDaySummary));$('prev-day').onclick=()=>moveDay(-1);$('next-day').onclick=()=>moveDay(1);$('save-btn').onclick=saveDay;renderHeader();applyDayToForm();if(isConfigured)refreshAll();
 </script>
+</body>
+</html>
 
 </body>
 </html>
