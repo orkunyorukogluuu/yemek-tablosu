@@ -82,7 +82,20 @@ async function fetchAllEntries(){if(!isConfigured)return[];const r=await fetch(S
 async function refreshAll(){setBusy(true);try{allEntries=await fetchAllEntries();applyDayToForm();renderHistory()}catch(e){showFlash('Veriler alınamadı. Bağlantını kontrol et.',true)}finally{setBusy(false)}}
 async function postToScript(payload){await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})}
 function extractFoods(text){const found=[],rx=/(\d+(?:[.,]\d+)?)\s*(kg|g|gram|gr|ml|l|adet|tane)?\s*([^\d,;]+?)(?=\s+\d+(?:[.,]\d+)?\s*(?:kg|g|gram|gr|ml|l|adet|tane)?\s|[,;]|$)/gi;let m;while((m=rx.exec(text))){let qty=Number(m[1].replace(',','.')),unit=(m[2]||'').toLowerCase(),name=m[3].trim();if(!name)continue;if(unit==='kg'||unit==='l')qty*=1000;if(unit==='adet'||unit==='tane')qty*=50;found.push({name,grams:Math.round(qty)})}return found}
-async function lookupFood(item){const url=`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(item.name)}&search_simple=1&action=process&json=1&page_size=8`;const res=await fetch(url);if(!res.ok)throw Error('api');const data=await res.json();const product=(data.products||[]).find(p=>p.nutriments&&p.nutriments['energy-kcal_100g']!==undefined)||data.products?.[0];if(!product)throw Error('not-found');const n=product.nutriments||{},factor=item.grams/100,kcal=Number(n['energy-kcal_100g'])||((Number(n['energy_100g'])||0)/4.184);return{name:product.product_name||item.name,grams:item.grams,kcal:kcal*factor,protein:(Number(n.proteins_100g)||0)*factor,carbs:(Number(n.carbohydrates_100g)||0)*factor,fat:(Number(n.fat_100g)||0)*factor}}
+const LOCAL_NUTRITION=[
+  {keys:['yumurta','egg'],name:'Yumurta',kcal:143,protein:12.6,carbs:0.7,fat:9.5},
+  {keys:['yulaf','oat'],name:'Yulaf',kcal:389,protein:16.9,carbs:66.3,fat:6.9},
+  {keys:['süt','sut','milk'],name:'Süt',kcal:61,protein:3.2,carbs:4.8,fat:3.3},
+  {keys:['muz','banana'],name:'Muz',kcal:89,protein:1.1,carbs:22.8,fat:.3},
+  {keys:['pirinç','pirinc','rice'],name:'Pirinç',kcal:130,protein:2.7,carbs:28.2,fat:.3},
+  {keys:['tavuk','chicken'],name:'Tavuk göğsü',kcal:165,protein:31,carbs:0,fat:3.6},
+  {keys:['yoğurt','yogurt','yogurt'],name:'Yoğurt',kcal:61,protein:3.5,carbs:4.7,fat:3.3},
+  {keys:['badem','almond'],name:'Badem',kcal:579,protein:21.2,carbs:21.6,fat:49.9},
+  {keys:['elma','apple'],name:'Elma',kcal:52,protein:.3,carbs:13.8,fat:.2}
+];
+function localFood(item){const q=item.name.toLocaleLowerCase('tr-TR');return LOCAL_NUTRITION.find(x=>x.keys.some(k=>q.includes(k)))}
+function scaleFood(base,item){const factor=item.grams/100;return{name:base.name||item.name,grams:item.grams,kcal:base.kcal*factor,protein:base.protein*factor,carbs:base.carbs*factor,fat:base.fat*factor}}
+async function lookupFood(item){try{const url=`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(item.name)}&search_simple=1&action=process&json=1&page_size=8`;const res=await fetch(url);if(res.ok){const data=await res.json(),product=(data.products||[]).find(p=>p.nutriments&&((p.nutriments['energy-kcal_100g']!==undefined)||p.nutriments.proteins_100g!==undefined));if(product){const n=product.nutriments||{},kcal=Number(n['energy-kcal_100g'])||((Number(n['energy_100g'])||0)/4.184);if(kcal||n.proteins_100g)return scaleFood({name:product.product_name||item.name,kcal,protein:Number(n.proteins_100g)||0,carbs:Number(n.carbohydrates_100g)||0,fat:Number(n.fat_100g)||0},item)}}}catch(e){console.warn('Open Food Facts kullanılamadı',e)}const fallback=localFood(item);if(fallback)return scaleFood(fallback,item);throw Error('not-found')}
 async function resolveMeal(meal){const input=$(`${meal}-desc`),text=input.value.trim();if(!text)return;if(!/\d/.test(text))throw Error('quantity');const parts=extractFoods(text);if(!parts.length)throw Error('quantity');const results=[];for(const item of parts)results.push(await lookupFood(item));mealFoods[meal]=mealFoods[meal].filter(x=>!x.legacy).concat(results);input.value='';renderDaySummary()}
 async function saveDay(){
   if(!isConfigured){showFlash('Önce SCRIPT_URL ayarlanmalı.',true);return}
