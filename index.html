@@ -81,7 +81,31 @@ function renderHeader(){const p=PEOPLE[personId];renderTabs();$('date-label').te
 async function fetchAllEntries(){if(!isConfigured)return[];const r=await fetch(SCRIPT_URL);if(!r.ok)throw Error('network');const data=await r.json();return Array.isArray(data)?data:[]}
 async function refreshAll(){setBusy(true);try{allEntries=await fetchAllEntries();applyDayToForm();renderHistory()}catch(e){showFlash('Veriler alınamadı. Bağlantını kontrol et.',true)}finally{setBusy(false)}}
 async function postToScript(payload){await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})}
-function extractFoods(text){const found=[],rx=/(\d+(?:[.,]\d+)?)\s*(kg|g|gram|gr|ml|l|adet|tane)?\s*([^\d,;]+?)(?=\s+\d+(?:[.,]\d+)?\s*(?:kg|g|gram|gr|ml|l|adet|tane)?\s|[,;]|$)/gi;let m;while((m=rx.exec(text))){let qty=Number(m[1].replace(',','.')),unit=(m[2]||'').toLowerCase(),name=m[3].trim();if(!name)continue;if(unit==='kg'||unit==='l')qty*=1000;if(unit==='adet'||unit==='tane')qty*=50;found.push({name,grams:Math.round(qty)})}return found}
+function extractFoods(text){
+  const found=[];
+  const number='(?:\\d+(?:[.,]\\d+)?(?:\\/\\d+)?)';
+  const units='yemek\\s+kaşığı|tatlı\\s+kaşığı|çay\\s+kaşığı|kaşık|kg|gram|gr|g|ml|l|adet|tane';
+  const rx=new RegExp(`(${number})\\s*(\\s*${units})?\\s*([^\\d,;]+?)(?=\\s+${number}\\s*(?:${units})?\\s|[,;]|$)`,'gi');
+  let m;
+  while((m=rx.exec(text))){
+    const raw=m[1].replace(',','.');
+    const qty=raw.includes('/')?raw.split('/').reduce((a,v,i)=>i? a/Number(v):Number(v),0):Number(raw);
+    const unit=(m[2]||'').trim().toLocaleLowerCase('tr-TR');
+    const name=m[3].trim();
+    if(!name||!qty)continue;
+    let grams;
+    if(unit.includes('yemek kaşığı'))grams=qty*15;
+    else if(unit.includes('tatlı kaşığı'))grams=qty*10;
+    else if(unit.includes('çay kaşığı'))grams=qty*5;
+    else if(unit==='kaşık')grams=qty*15;
+    else if(unit==='kg'||unit==='l')grams=qty*1000;
+    else if(unit==='g'||unit==='gr'||unit==='gram'||unit==='ml')grams=qty;
+    else if(unit==='adet'||unit==='tane')grams=qty*(/yumurta|egg/i.test(name)?50:/roka/i.test(name)?20:100);
+    else grams=qty*(/baget/i.test(name)?250:/yumurta|egg/i.test(name)?50:/roka/i.test(name)?20:100);
+    found.push({name,grams:Math.round(grams)});
+  }
+  return found;
+}
 const LOCAL_NUTRITION=[
   {keys:['yumurta','egg'],name:'Yumurta',kcal:143,protein:12.6,carbs:0.7,fat:9.5},
   {keys:['yulaf','oat'],name:'Yulaf',kcal:389,protein:16.9,carbs:66.3,fat:6.9},
